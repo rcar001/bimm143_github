@@ -1,6 +1,9 @@
-# bimm143_github
-My classwork from [BIMM 143](https://bioboot.github.io/bimm143_W26/) at UC San Diego 
+---
+title: "Class 015 - Git and Git Hub M "
+author: "Carias, R.D."
+format: html
 
+---
 
 ## Basic of using Git
 
@@ -32,19 +35,5 @@ The core steps to using git involve:
 You can change your "history" and status 
 `git status`
 `git log` (push Q to exit)
-
-
-5. Git push to sync from GitUb 
-  The down arrow in RStuido 
-  `git push`
-  
-  
-5. Git pull to sync from GitUb 
-  The down arrow in RStuido 
-  `git pull`
-  
-  
-You can check your project history and status with: 
-`git status`
 
 
