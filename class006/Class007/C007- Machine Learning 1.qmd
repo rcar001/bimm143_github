@@ -1,0 +1,332 @@
+---
+title: "Class 007 - Machine Learning 1"
+author: "R. D. Carias (PID: A18573289)"
+format: pdf
+toc: TRUE
+---
+## Background
+
+Today we are going to explore introduction to machine learning methods. e.g. **Clustering**, **Dimensionality**, and **Reduction**. 
+
+> Q. Generate 30 random numbers cenetered at +3 and another 30 centered at -3?
+
+Hint: rbind and cbind are partners in crime. r for row and c for columns. 
+
+```{r}
+tmp <- c(rnorm(30, mean = 3),rnorm(30, mean= -3))
+  
+tmp
+
+```
+
+```{r}
+x <- cbind(x=tmp, y=rev(tmp))
+plot(x)
+
+```
+
+## K - Means Clustering 
+
+The main function in base R for K-means clustering is called `kmeans()`:
+
+x:
+numeric matrix of data, or an object that can be coerced to such a matrix (such as a numeric vector or a data frame with all numeric columns).
+
+centers:	
+either the number of clusters, say 
+k
+k, or a set of initial (distinct) cluster centers. If a number, a random set of (distinct) rows in x is chosen as the initial centers.
+
+```{r}
+kmeans(x, centers = 2)
+
+km <- kmeans(x, centers = 2)
+
+```
+
+> Q. What components of the results objects details the cluster sizes?
+
+
+```{r}
+km$size
+
+```
+
+
+> Q. What component of the results object details the cluster centers?
+
+> Q. What component of the reresults object details the cluster membership vector(i.e. our main results of which points lie in which cluster)?
+
+```{r}
+km$cluster
+```
+
+> Q. Plot our clustering results with points colored by cluster and also add a blue point at the center of both centers. 
+
+```{r}
+plot(x, col = km$cluster) 
+points(km$centers, col='blue', pch=15)
+
+
+```
+# Annotation: `plot`(x, col = c("red","blue")) cycles one point red, one blue, one red, etc. 
+
+
+> Q. Run `kmeans()` again and this time produce 4 clusters and call your results `km4`. Can you make results like the figures above?
+
+```{r}
+
+kmeans(x, centers = 4)
+
+km4 <- kmeans(x, centers = 4)
+
+km4$size
+
+km4$cluster
+
+plot(x, col = km4$cluster) 
+points(km4$centers, col='blue', pch=15)
+
+
+
+```
+
+
+The Metric
+
+```{r}
+
+km$tot.withinss
+
+km4$tot.withinss
+
+```
+
+
+
+> Q. Let's try a different number of K (centers) from 1 to 30 and see what the best reult is?
+
+Ex: Fore-loops
+
+```{r}
+ans <- NULL
+
+for (i in 1:30) {
+  ans <- c(ans, kmeans(x, centers = i)$tot.withinss)
+}
+
+ans
+
+```
+
+
+
+```{r}
+plot(ans, type="o")
+```
+# Annotations: Why this is “self-fulfilling”:
+You define “good clustering” as low within-cluster variance, then choose k based on which value minimizes within-cluster variance.
+
+That is circular.
+
+
+## Hierarchical Clustering 
+
+The results from this will elucidate the structure of this hierarchy.
+
+`hclust()`(d, method = "complete", members = NULL)
+
+- **Unlike** `kmeans()`, which does all the work for you, you can't just pass 'hclust()' It wants/needs a distance matrix / dissimilarity matrix, this is like the output/return of `dist()` function. `dist()` automatically calculates euclidean distance.
+
+- "Instead of giving you coordinates, we are giving distances from every other point."
+
+
+
+```{r}
+
+d <- dist(x)
+hc <- hclust(d)
+plot(hc)
+```
+# Notes: Notice that , 1-30 is one main branch and the other is 31-60. Recall, these diagrams can rotate at nodes. The y-axis shows the distance (height) at which observations or clusters are merged, indicating how dissimilar they were at the time of joining.
+
+To extract our cluster membership vector from a `hclust()` result object we have to cut our tree at a given height to yield separate groups/branches.
+
+```{r}
+plot(hc)
+abline(h=8, col = "red", lty =2)
+
+#Not cut yet, just indicates where we are cutting. Why 8? This is where the two clusters we are interested in branch from a common node. 
+```
+
+
+**To accomplish this we use `cutree()` function on our `hclust` object.**
+
+```{r}
+grps <- cutree(hc, h=8)
+grps
+```
+
+```{r}
+table (grps, km$cluster)
+
+
+```
+
+
+## Dimensionality Reduction / Principle Component Analysis (PCA)
+
+- We are attempting to reduce the features of dimensionality while losing as little information as possible. 
+
+PCA = Eigenvectors ; Is "like" a big funnel. Where our output allows us to investigate our data. 
+
+
+### PCA of UK Food Data
+
+First, import the dataset required. 
+
+```{r}
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url)
+x
+```
+
+> Q1. How many rows and columns are in your new data frame named x? What R functions could you use to answer this questions?
+
+```{r}
+dim(x)
+```
+
+One potential solution, is to set the row names, doing so "manually".
+
+
+```{r}
+rownames(x) <- x[,1]
+```
+
+Removing the first columns can be accomplished by -1 to start indexing in column.
+
+```{r}
+x <- x[,-1]
+x
+```
+
+The issue with this, you start to lose columns / data.
+
+
+This can also be accomplished by arguing with `read.csv()`.
+
+```{r}
+x <- read.csv(url, row.names = 1)
+x
+
+```
+
+
+> Q2. Which approach to solving the ‘row-names problem’ mentioned above do you prefer and why? Is one approach more robust than another under certain circumstances?
+
+- We rather argue and set the name immediately when we read in the csv. Doing so, allows us to start data d.f manipulations from the get go. 
+
+### Spotting Major Differnces and trends
+
+This is difficult, even in a wee little graph like this with 17D.
+
+```{r}
+
+barplot(as.matrix(x), beside=T, col=rainbow(nrow(x)))
+```
+
+
+```{r}
+barplot(as.matrix(x), beside=F, col=rainbow(nrow(x)))
+
+```
+
+> Q4: Changing what optional argument in the above ggplot() code results in a stacked barplot figure?
+
+-
+
+
+> Q5: We can use the pairs() function to generate all pairwise plots for our countries. Can you make sense of the following code and resulting figure? What does it mean if a given point lies on the diagonal for a given plot?
+
+-
+
+pairs(x, col=rainbow(nrow(x)), pch=16)
+
+
+```{r}
+pairs(x, col=rainbow(nrow(x)), pch=16)
+```
+Observe the top row, from left to right. On the Y-axis for these plots, you have England's. All dots represent the food categories.
+
+
+```{r}
+library(pheatmap)
+
+pheatmap( as.matrix(x) )
+```
+
+> Q6. Based on the pairs and heatmap figures, which countries cluster together and what does this suggest about their food consumption patterns? Can you easily tell what the main differences between N. Ireland and the other countries of the UK in terms of this data-set? 
+
+- 
+
+
+## Principal Component Analysis PCA - "To the rescue!"
+
+The main PCA function in **base R**, which is probably the most difficult to use, is `prcomp()'. This functions wants the transpose of our food data (i.e. the foods as columns and the counties as rows)
+
+
+```{r}
+
+pca <- prcomp(t(x)) #t(x) = transpose matrix.
+
+```
+
+```{r}
+
+summary(pca)
+
+```
+
+```{r}
+attributes(pca)
+
+```
+
+To make one of our main PCA result figures, we turn to `PCA$x` the scores along our new PCs. This is referred to as score plots, pc plots, ordination plots and various others. 
+
+
+```{r}
+pca$x
+```
+```{r}
+
+my_cols <- c("orange", "red", "blue", "darkgreen")
+
+
+```
+
+
+
+```{r}
+library(ggplot2)
+
+ggplot(pca$x) + aes(PC1, PC2) + geom_point(col=my_cols)
+```
+
+The second major result figure is called a "loadings plot" of "variable contributions plot" or "weight plot" # Lots of Terminology 
+
+- How do the original variables weigh the respective axis. Think , weighted grading. 
+
+```{r}
+ggplot(pca$rotation) + 
+  aes(PC1, y = reorder(rownames(pca$rotation), PC1)) +
+  geom_col(fill = "steelblue") +
+  xlab("PC1 Loading Score") +
+  ylab("") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 9))
+
+```
+ # This can show us, why are these cells active compared to others, well, due to genes which are up- regulated compared to the other . 
+

@@ -1,0 +1,72 @@
+---
+title: "Question 6 HW06 WorkSheet"
+author: "Ricardo Carias (PID:A18573289)"
+format: pdf
+toc: TRUE
+---
+
+## Q6 - How would you generalize the original code to work with any set of input protein structures?
+
+
+```{r}
+
+library(bio3d)
+
+Protein_Interx <- function(pdb_id,chain = NULL, atom.type = "CA", plot = TRUE) 
+  
+  {
+  
+  pdb <- read.pdb(pdb_id)
+  
+  Asel <- atom.select(pdb,
+                     chain = chain,
+                     elety = atom.type)
+  
+  # Annotation: Using the function above, our pdb_id input argument is pdb_id and our chain input argument is a specific chain of the protein identified by the id used. 
+  
+  
+  bfactors <- pdb$atom$b[Asel$atom]
+  residues <- pdb$atom$resno[Asel$atom]
+  
+  # Annotation: is a vector of B-factors for the chosen atoms. The vector is a numeric one and data is pulled from temperature factor of the table of atoms for the given structure. Residue is another  vector of residue numbers that correspond to the B-factors.
+  
+  
+  result <- data.frame(
+    residue = residues,
+    bfactor = bfactors
+  )
+  
+  # Annotation: Creates a data frame as an output. We create the two rows for the outputs of residues and bfactors.
+  
+  
+ 
+  if (plot) {
+    plot(result$residue,
+         result$bfactor,
+         type = "l",
+         xlab = "Residue number",
+         ylab = "B-factor",
+         main = paste("Protein flexibility:", pdb_id))
+  }
+  
+  
+  
+  return(result)
+}
+
+
+# Annotation: First, the 'if' creates a logical statement and serves to produce a line plot. It will return all the results defined by the code chunk section which created the data frame above. 
+
+
+```
+
+
+## Use the code to inquire about protein structures.
+
+```{r}
+Protein_Interx(pdb_id = "4HHB", chain = "A")
+
+# Annotations: Example uses the Protein Data Bank identifier  for human hemoglobin protein structure. 
+
+```
+

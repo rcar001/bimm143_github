@@ -1,0 +1,93 @@
+---
+title: "HW006 - Functions in R"
+author: "Ricardo D. Carias (PID: A18573289)"
+format: html
+---
+## A. Can you improve this analysis code?
+
+```{r}
+
+# Creates Data Frame 
+df <- data.frame(a=1:10, b=seq(200,400,length=10),c=11:20,d=NA)
+
+# This is the "improved" code.
+model2 <- function(x) {
+  (x - min(x)) / (max(x) - min(x))
+}
+
+df$a <- model2(df$a)
+df$b <- model2(df$b)
+df$c <- model2(df$c)
+
+# Annotations: The first line creates a data table with four columns, each containing a set of numbers that will be used for analysis. The function definition creates a reusable rule that re-scales any numeric column so its values fall between 0 and 1. The final lines apply that re-scaling function to three columns of the table, replacing the original values with normalized ones.
+
+```
+
+
+
+## B. Can you improve this analysis code?
+
+```{r}
+
+library(bio3d)
+
+# PDB IDs to analyze
+pdb_ids <- c("4AKE", "1AKE", "1E4Y")
+
+# Read PDB files
+pdbs <- lapply(pdb_ids, read.pdb)
+
+# Trim to chain A, C-alpha atoms
+pdbs_chainA <- lapply(pdbs, trim.pdb, chain = "A", elety = "CA")
+
+# Extract B-factors
+b_factors <- lapply(pdbs_chainA, function(x) x$atom$b)
+
+# Plot B-factors
+for (i in seq_along(b_factors)) {
+  plotb3(b_factors[[i]],
+         sse = pdbs_chainA[[i]],
+         typ = "l",
+         ylab = "B-factor",
+         main = pdb_ids[i])
+}
+
+
+# Annotations: The code reads in multiple protein structures and keeps only the alpha-carbon atoms from chain A for comparison. It then extracts the B-factor values from each structure, which reflect atomic flexibility. Finally, the B-factors are plotted for each protein so their flexibility patterns can be visually compared.
+
+```
+
+
+## Questions 1-6 
+
+Q1. What type of object is returned from the read.pdb() function?
+
+Q2. What does the trim.pdb() function do?
+
+Q3. What input parameter would turn off the marginal black and grey
+rectangles in the plots and what do they represent in this case?
+
+Q4. What would be a better plot to compare across the different proteins?
+
+Q5. Which proteins are more similar to each other in their B-factor trends. How could you quantify this? 
+
+HINT: try the rbind(), dist() and hclust() functions together with a resulting dendrogram plot. Look up the documentation to see what each of these functions does.
+
+```{r}
+
+bf_mat <- do.call(rbind, b_factors)
+rownames(bf_mat) <- pdb_ids
+
+hc <- hclust(dist(bf_mat))
+plot(hc)
+
+
+# Annotations: The code was rewritten to store the B-factor data in a single list instead of separate variables. This makes the analysis cleaner and easier to extend to additional protein structures. As a result, the original individual variables no longer exist and must be accessed through the list instead.
+
+```
+
+
+
+
+
+ 
