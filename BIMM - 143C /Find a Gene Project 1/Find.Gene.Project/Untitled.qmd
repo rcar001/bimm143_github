@@ -1,7 +1,0 @@
----
-title: "Find A Gene Project - IFNB"
-author: "Ricardo D. Carias - rcarias@ucsd.edu"
-format: html
----
-
-## 
