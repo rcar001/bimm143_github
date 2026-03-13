@@ -1,21 +1,14 @@
-# Bioinformatics Portfolio 
-My classwork from [BIMM 143](https://bioboot.github.io/bimm143_W26/) at UC San Diego 
+# Bioinformatics Portfolio
 
+My coursework from BIMM 143 at UC San Diego.
 
-## Index of Materials 
+## Classes
 
-* Introductory Classes
-  
-Class 005 [Data Viz w/ ggplot](class005/class05.pdf)
+- [Class 5](class005/)
+- [Class 6](class006/)
+- [Class 8](class008/)
+- [Class 10](Class010/)
 
+## Projects
 
-Class 006
-
-Class 008
-
-
-  
-You can check your project history and status with: 
-`git status`
-
-
+- [Find a Gene Project](Find%20a%20Gene%20Project/Find.Gene.Project/)

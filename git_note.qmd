@@ -37,3 +37,17 @@ You can change your "history" and status
 `git log` (push Q to exit)
 
 
+5. Git push to sync from GitUb 
+  The down arrow in RStuido 
+  `git push`
+  
+  
+5. Git pull to sync from GitUb 
+  The down arrow in RStuido 
+  `git pull`
+  
+  
+You can check your project history and status with: 
+`git status`
+
+
