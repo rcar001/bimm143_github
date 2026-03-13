@@ -25,4 +25,4 @@ My coursework from BIMM 143 at UC San Diego.
 
 
 ## Projects
-- [Class 3](class003/FAGp.pdf)
+- [Class 3](class003/GeneProject.pdf)
