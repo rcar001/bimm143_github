@@ -1,48 +1,19 @@
-# bimm143_github
+# Bioinformatics Portfolio 
 My classwork from [BIMM 143](https://bioboot.github.io/bimm143_W26/) at UC San Diego 
 
 
-## Basic of using Git
+## Index of Materials 
 
-Git is a distributed version of control system (VCS) that is very popular. 
-
-The core steps to using git involve:
-
-1. Initiate a git repository 
-
-  In RStudio we just click the wee little radio button on project creation. At the command line we type: `git init`
+* Introductory Classes
   
-  
-2. Do your normal work.
-  Add files
-  Modify files
-  etc. 
- 
-  
-3. Add your important files to the "stage" 
-  In Rstudio we click the "stage" radio vutton 
-  `git add youfilename`
-  
-  
-4. Commit your staged files tot he repository
-  In RStudio you just hit the "commit" button and add a msg.
-  `git commit -m "Your wee msg`
-  
-  
-You can change your "history" and status 
-`git status`
-`git log` (push Q to exit)
+Class 04 [R Fundementals](class005/class05.pdf)
 
 
-5. Git push to sync from GitUb 
-  The down arrow in RStuido 
-  `git push`
-  
-  
-5. Git pull to sync from GitUb 
-  The down arrow in RStuido 
-  `git pull`
-  
+* R Fundementals
+
+* Genomics
+
+
   
 You can check your project history and status with: 
 `git status`
