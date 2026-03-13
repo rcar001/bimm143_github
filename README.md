@@ -16,13 +16,13 @@ My coursework from BIMM 143 at UC San Diego.
 - [Class 11](class011/Alphafold-2.11.26-.pdf)
 - [Class 12](class012/Class-012-.pdf)
 - [Class 13](class013/Class-013---Transcriptomics-and-RNA-Seq.pdf)
-- [Class 14](class014/RNASeq Mini-Project/Carias--MIniRNASeq.pdf)
+- [Class 14](class014/Carias--MIniRNASeq.pdf)
 - [Class 16](class016/)
 - [Class 17](class017/Class017.pdf)
 - [Class 18](class018/class018--pertussis.pdf)
-- [Class 19](class019/Lab 019 _Mini Project_Cancer.pdf)
-- [Class 20](class020/)
+- [Class 19](class019/Class019.pdf)
+
 
 
 ## Projects
-- [Class 3](class003/Find_Gene_PjctvFinal.pdf)
+- [Class 3](class003/FAGp.pdf)
