@@ -2,7 +2,7 @@
 
 My coursework from BIMM 143 at UC San Diego.
 
-*DONT ADD CLASS 15* -> WILL FUCK UP OUR PROCESS
+*DONT ADD CLASS 15*
 
 ## Classes
 
