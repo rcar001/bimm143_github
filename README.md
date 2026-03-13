@@ -1,8 +1,5 @@
-# Bioinformatics Portfolio
+My coursework from BIMM 143 - Bioinformatics Laboratory at UC San Diego.
 
-My coursework from BIMM 143 at UC San Diego.
-
-Class 15 - GitHub Rep.
 
 ## Classes
 
@@ -25,4 +22,4 @@ Class 15 - GitHub Rep.
 
 
 ## Projects
-- [Class 3 - Find a Gene Project](class003/GeneProject.pdf)
+- [Find a Gene Project](class003/GeneProject.pdf)
