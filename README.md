@@ -6,12 +6,12 @@ My classwork from [BIMM 143](https://bioboot.github.io/bimm143_W26/) at UC San D
 
 * Introductory Classes
   
-Class 05 [Data Viz w/ ggplot](class005/class05.pdf)
+Class 005 [Data Viz w/ ggplot](class005/class05.pdf)
 
 
-* R Fundementals
+Class 006
 
-* Genomics
+Class 008
 
 
   
