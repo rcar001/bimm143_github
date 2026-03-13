@@ -4,7 +4,7 @@ My coursework from BIMM 143 at UC San Diego.
 
 ## Classes
 
--[Class 4](class004 copy/)
+- [Class 4](class004 copy/)
 - [Class 5](class005/)
 - [Class 6](class006/)
 - [Class 8](class008/)
