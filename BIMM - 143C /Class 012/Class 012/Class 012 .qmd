@@ -1,0 +1,85 @@
+---
+title: "Class 012"
+author: "Ricardo Carias PID: A18573289"
+format: pdf
+toc: TRUE
+---
+
+## Section 1
+
+
+> Q5: What proportion of the Mexican Ancestry in Los Angeles sample population (MXL) are homozygous for the asthma associated SNP (G|G)?
+
+
+```{r}
+mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+head(mxl)
+
+```
+
+
+```{r}
+table(mxl$Genotype..forward.strand.)
+```
+
+Nine are homozygous for the asthma associated SNP.
+
+Towards Proportion: 
+
+```{r}
+table(mxl$Genotype..forward.strand.)/nrow(mxl) *100
+```
+**Therefore**, `14.0625%` are homozygous for the asthma associated SNP.
+
+
+```{r}
+gbr <- read.csv("373522-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+head(gbr)
+
+table(gbr$Genotype..forward.strand.)/nrow(gbr) *100
+```
+
+**Therefore**, `29.67033%` are homozygous for the asthma associated SNP within the GBR population.
+
+Interpretation, the variant that is associated with childhood asthma is more frequent in GBR pop compared to MXL pop.
+
+Let's keep digging. 
+
+Note: The course videos, lab sheets, instructions, and other supporting documents do not align directly. You get what you get and I dont know why there is two assignements for this. 1 for lab and 1 for hw but they both have question 11 and 12.  
+
+## Section 4 Population Analysis 
+
+```{r}
+expr <- read.table("rs8067378_ENSG00000172057.6.txt", header=TRUE)
+
+head(expr)
+
+nrow(expr)
+```
+
+ >Q13: Sample size per genotype
+
+```{r}
+table(expr$geno)
+```
+
+
+
+ >Q13: Median expression per genotype
+
+```{r}
+tapply(expr$exp, expr$geno, median)
+```
+There are 462 individuals which we have the data for. Distribution of genotypes: 108 A/A, 233 A/G, and 121 G/G. 
+
+ >Q14: Boxplot
+
+```{r}
+library(ggplot2)
+ggplot(expr) + 
+  aes(geno, exp, fill = geno) + 
+  geom_boxplot(notch = TRUE)
+```
+When compared across the three genotypes, we can see that the A/A genotype results in the highest median expression levels. The heterozygous A/G genotype shows intermediate expression levels, while the G/G genotype results in the lowest expression levels. This dosage affect could be explained by which alleles a given individual has rather than simple dominance. 
+
+

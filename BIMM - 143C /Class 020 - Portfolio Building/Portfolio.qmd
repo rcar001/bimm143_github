@@ -1,0 +1,14 @@
+---
+title: "Portfolio Building"
+author: "Ricardo D. Carias (PID: A18573289)"
+format: html
+---
+
+## Review of Quarter
+
+- We should be able to use the aesthetics of any data presentation we like and use it to build our own variation. 
+
+- Clustering interpretation and building.
+
+- 
+

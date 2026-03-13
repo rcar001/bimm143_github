@@ -1,0 +1,306 @@
+---
+title: "Class 010 - Structural Biology pt. I"
+author: "Carias, R.D. (PID: A18573289)"
+format: pdf
+toc: TRUE
+---
+
+## 1 - Introduction to the RCSB [ProteinData Bank (PDB)](https://www.rcsb.org/) 
+```{r}
+#Note: this is how we create hyperlinks within our HTML.
+```
+
+
+PDB is the main repository of bio-molecular structure data. Let;s see what is in it:
+
+```{r}
+stats <- read.csv("pdb_stats (1).csv")
+head(stats)
+```
+
+
+>Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+n.sums <- colSums(stats[ , -1]) # compute column totals after dropping the first (non-numeric) identifier column
+n <- n.sums / n.sums["Total"]
+round(n, 3)
+
+```
+
+
+>Q2: What proportion of structures in the PDB are protein?
+
+nsums["Total"]
+
+```{r}
+n.sums["Total"]
+```
+
+>Q3: Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+
+~1,173 as of 2/9/26.
+
+```{r}
+#Note: I don't think this is correct, too tired to care. 
+```
+
+## Using Molstar
+
+We can use the main [Molstar viewer online](https://molstar.org/viewer/) 
+
+![**Figure Caption Goes Here** and appears below image. **Ex:** First view of HIV-Pr Dimer with ligand in active site.](1HSG.png)  
+
+>Q4: Water molecules normally have 3 atoms. Why do we see just one atom per water molecule in this structure?
+
+>Q5: There is a critical “conserved” water molecule in the binding site. Can you identify this water molecule? What residue number does this water molecule have
+
+## 2 - Visualizing the HIV-1 protease structure
+
+>Q6: Generate and save a figure clearly showing the two distinct chains of HIV-protease along with the ligand. You might also consider showing the catalytic residues ASP 25 in each chain and the critical water (we recommend “Ball & Stick” for these side-chains). Add this figure to your Quarto document.
+Discussion Topic: Can you think of a way in which indinavir, or even larger ligands and substrates, could enter the binding site?
+
+![](1HSG(2).png)
+
+> Q7 (optional) Generate and save a figure clearly showing the two HIV-1 protease chains, the bound inhibitor, the catalytic ASP25 residues from each chain, and the conserved active-site water molecule.
+
+![Ligand is highlighted green, residues ASP25 for both chains shown along with H2O molecule as red space fill sphere.](1HSG_3.png)
+
+
+## 3 - Introduction to Bio3D in R
+
+`Bio3D` is an R package for structural bioinformatics. Features include the ability to read, write and analyze biomolecular structure, sequence and dynamic trajectory data.
+
+```{r}
+library(bio3d)
+pdb <- read.pdb("1hsg")
+
+pdb
+```
+
+```{r}
+head(pdb$atom)
+```
+
+
+>Q7: How many amino acid residues are there in this pdb object? 
+
+There are 198 AA residues. This can be identifed by: '(residues/Calpha atoms#: 198)'. 
+
+>Q8: Name one of the two non-protein residues? 
+
+MK1 is one of the two non-protein residues.
+
+>Q9: How many protein chains are in this structure? 
+
+This structure has 2 protein chains, identified by A and B.
+
+Quick PDB Visualization in R
+
+```{r}
+#library(bio3dview)library(NGLVieweR)view.pdb(pdb) |>setSpin()
+
+
+# Select the important ASP 25 residue sele <- atom.select(pdb, resno=25)
+
+# and highlight them in spacefill representation view.pdb(pdb, cols=c("navy","teal"),highlight = sele, highlight.style = "spacefill") |> setRock()
+
+
+#Adjusted this code to keep it here silently. 
+```
+
+Reading in Adenylate Kinase 
+
+```{r}
+adk <- read.pdb("6s36")
+adk
+```
+```{r}
+# Perform flexiblity prediction
+m <- nma(adk)
+plot(m)
+```
+
+Movie - Visual :
+
+```{r}
+mktrj(m, file="adk_m7.pdb")
+
+```
+
+
+
+## 4 - Comparative structure analysis of Andenylate Kinase
+
+
+```{r}
+#Notes (From instructions) : The install.packages() function is used to install packages from the main CRAN repository for R packages. BioConductor is a separate repository of R packages focused on high-throughput biomolecular assays and biomolecular data. Packages from BioConductor can be installed using the BiocManager::install() function. Finally, R packages found on GitHub or BitBucket can be installed using devtools::install_github() and devtools::install_bitbucket() functions.
+```
+
+>Q10. Which of the packages above is found only on BioConductor and not CRAN? 
+
+`msa` is only available through BioConductor and not CRAN. 
+
+
+>Q11. Which of the above packages is not found on BioConductor or CRAN?: 
+`bio3dview` is on neither.
+
+>Q12. True or False? Functions from the pak package can be used to install packages from GitHub and BitBucket? 
+
+TRUE
+
+
+##Comparative protein structure analysis with PCA
+
+Search and Retrieve 
+
+```{r}
+library(bio3d)
+
+id <- "1ake_A"
+aa <- get.seq("1ake_A")
+
+aa
+```
+```{r}
+blast <- blast.pdb(aa)
+```
+
+**Have a quick look:** 
+```{r}
+head(blast$hit.tbl)
+```
+
+```{r}
+hits <- plot(blast)
+
+#What is this plot: ea dot is one hit on BLAST and ordered by e-value. Black and Red, cut off at the dash lines, the system is telling you to focus on the ones to the left of the black line and ignore the red dots.
+
+```
+
+Top Hits:
+
+```{r}
+head(hits$pdb.id)
+```
+Now, we can download these **"top hits"**. These will all be ADK structures in the PDB database. 
+
+
+
+>Q13. How many amino acids are in this sequence, i.e. how long is this sequence?
+
+Output shows that this contains 214 AAs in this sequence.
+
+
+```{r}
+hits <- NULL
+hits$pdb.id <- c('1AKE_A','6S36_A','6RZE_A','3HPR_A','1E4V_A','5EJE_A','1E4Y_A','3X2S_A','6HAP_A','6HAM_A','4K46_A','3GMT_A','4PZL_A')
+```
+
+```{r}
+# Download releated PDB files
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+```
+
+We need (1) package from BioConductor. To set this up, first, instal package **"BiocManager"** from CRAN. Now we use `install()` function from this package like this: `BiocManager::install("msa")`
+
+```{r}
+# Align related PDBs
+pdbs <- pdbaln(files, fit = TRUE, exefile="msa")
+```
+This has taken all pdb and fitted them, aka superimposed them. Now, let's have a wee little peek. 
+
+```{r}
+library(bio3dview)
+view.pdbs(pdbs, colorScheme = "residue")
+
+```
+
+At this point we can do more than run a PCA on these data. Includes: `rmsd()` or `rmsf()`.
+
+Perform PCA 
+
+```{r}
+# Perform PCA
+pc.xray <- pca(pdbs)
+plot(pc.xray)
+
+#summary of all results.
+```
+
+```{r}
+plot(pc.xray, 1:2)
+```
+
+To wrap this up lets make a wee lil movie of the major motions or structural differences in the data set  - we will call this 'trajectory'
+
+
+```{r}
+mktrj(pc.xray, file="results.pdb")
+
+#we can now open the results file, in working directory, and visualize our trajectory 'animation'.
+```
+
+
+
+
+Annotate Collected PDB Structures
+
+```{r}
+# Vector containing PDB database codes
+ids <- basename.pdb(pdbs$id)
+
+anno <- pdb.annotate(ids)
+unique(anno$source)
+
+anno
+```
+
+```{r}
+#Note: Function rmsd() will calculate all pairwise RMSD values of the structural ensemble. This facilitates clustering analysis based on the pairwise structural deviation:
+```
+
+```{r}
+# Calculate RMSD
+rd <- rmsd(pdbs)
+
+# Structure-based clustering
+hc.rd <- hclust(dist(rd))
+grps.rd <- cutree(hc.rd, k=3)
+
+plot(pc.xray, 1:2, col="grey50", bg=grps.rd, pch=21, cex=1)
+```
+```{r}
+#Notes (From Instructions): The plot shows a conformer plot – a low-dimensional representation of the conformational variability within the ensemble of PDB structures. The plot is obtained by projecting the individual structures onto two selected PCs (e.g. PC-1 and PC-2). These projections display the inter-conformer relationship in terms of the conformational differences described by the selected PCs.
+```
+
+
+
+## 5 - Optional
+
+## 6 - Normal mode analysis 
+
+(Says optional but has question so do it anyways)
+
+```{r}
+# NMA of all structures
+modes <- nma(pdbs)
+
+plot(modes, pdbs, col=grps.rd)
+```
+
+>Q14. What do you note about this plot? Are the black and colored lines similar or different? Where do you think they differ most and why?
+
+The black and colored lines are similar in general shape which is indicative of their spatial similarity. This shared flexibility indicates conserved motion across proteins. They differ the most in the region from ~ 110-170. Within this region we can see much higher amplitude for the two hits indicated, 6S36_A and 6RZE_A, can correspond to a few characteristics. Namely, changes in conformational states, seqeunce variation, ligands etc. 
+
+
+
+
+
+
+
+
+
+
+
+

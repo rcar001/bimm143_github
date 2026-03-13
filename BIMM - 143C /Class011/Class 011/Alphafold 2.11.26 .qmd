@@ -1,0 +1,116 @@
+---
+title: "Class 011 Alphafold"
+author: "Ricardo D. Carias (A18573289)"
+format: pdf
+toc: true
+---
+## Background
+
+Proteins are natures robots being responsible for nearly every task in living organisms. Just as robots are programmed to perform specific tasks, proteins, through their distinct 3D shapes (known as their atomic structures), carry out diverse functions from catalysis, signaling and transport to replication, division and movement. Indeed, even a subtle alteration in structure can lead to drastic changes in activity and function. Knowledge of protein structures therefore yields a deeper understanding of protein function and disfunction in health and disease.
+
+Unfortunately, experimental structure determination is far more complex and time-consuming than sequence determination. The main PDB repository of protein structures lags far behind sequence databases such as UniProt in terms of size and coverage of known proteins (just 7% coverage as we saw in our last lab). Expanding this coverage would vastly accelerate efforts to understand distant evolutionary relationships, probe the inner-workings of cells and enable more rapid drug discovery.
+
+The PDB database, the main repository of experimental structures, only has ~250 thousand structures. This was observed on Lab 010. The main sequence database has **over** 200 million sequences. This disparity is referred to as the 'structure/knowledge' gap. 
+
+Whats the coverage?
+
+```{r}
+(250000/200000000)*100
+```
+Indicated above, only 0.125% of known sequences have resolved structures. Not enough grad students, not enough money, and the process of crystallization is hard and a long time investment.
+
+
+Average structure is ~ $1 million dollars and anywhere from 3-5 years. STRUCTURE GAP.
+
+
+## EBI AlphaFold Database 
+
+The European Bioinformatics Institute has a database of pre-computed AlphaFold  modeles called AFDB.
+
+
+## Running Alphafold 
+
+
+We will use ColabFold < https://github.com/sokrypton/ColabFold >
+
+
+```
+>HIV-Pr-Dimer
+PQITLWQRPLVTIKIGGQLKEALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYD
+QILIEICGHKAIGTVLVGPTPVNIIGRNLLTQIGCTLNF:PQITLWQRPLVTIKIGGQLK
+EALLDTGADDTVLEEMSLPGRWKPKMIGGIGGFIKVRQYDQILIEICGHKAIGTVLVGPT
+PVNIIGRNLLTQIGCTLNF
+
+
+```
+
+
+## Section 8
+
+```{r}
+# ---- SECTION 8 FULL SETUP ----
+
+library(bio3d)
+library(pheatmap)
+library(jsonlite)
+
+
+results_dir <- "hivpr_23119/"
+
+
+pdb_files <- list.files(path=results_dir,
+                        pattern="*.pdb",
+                        full.names = TRUE)
+
+# Print our PDB file names
+basename(pdb_files)
+```
+```{r}
+library(bio3d)
+
+# Read all data from Models 
+#  and superpose/fit coords
+pdbs <- pdbaln(pdb_files, fit=TRUE, exefile="msa")
+```
+
+```{r}
+pdbs
+```
+
+```{r}
+rd <- rmsd(pdbs, fit=T)
+range(rd)
+```
+```{r}
+library(pheatmap)
+
+colnames(rd) <- paste0("m",1:5)
+rownames(rd) <- paste0("m",1:5)
+pheatmap(rd)
+```
+
+```{r}
+# Read a reference PDB structure
+pdb <- read.pdb("1hsg")
+```
+```{r}
+plotb3(pdbs$b[1,], typ="l", lwd=2, sse=pdb)
+points(pdbs$b[2,], typ="l", col="red")
+points(pdbs$b[3,], typ="l", col="blue")
+points(pdbs$b[4,], typ="l", col="darkgreen")
+points(pdbs$b[5,], typ="l", col="orange")
+abline(v=100, col="gray")
+```
+
+```{r}
+core <- core.find(pdbs)
+core.inds <- print(core, vol=0.5)
+xyz <- pdbfit(pdbs, core.inds, outpath="corefit_structures")
+```
+```{r}
+rf <- rmsf(xyz)
+
+plotb3(rf, sse=pdb)
+abline(v=100, col="gray", ylab="RMSF")
+```
+

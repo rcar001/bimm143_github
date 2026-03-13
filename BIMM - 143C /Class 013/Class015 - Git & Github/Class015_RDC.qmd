@@ -1,0 +1,16 @@
+---
+title: "Class 015 - Git and Github"
+author: "Ricardo D. Carias (PID: A18573289)"
+format: html
+---
+
+## Background 
+
+The goal of this hands-on session is to practice a version control workflow with GitHub and RStudio that streamlines working with our most important collaborator: Future You.
+
+In this session we will interface with GitHub from our local computers using RStudio.
+
+You can perform core functionality through Rstudio.
+
+
+

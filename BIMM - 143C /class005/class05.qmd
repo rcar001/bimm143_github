@@ -1,0 +1,159 @@
+---
+title: "Class 5: Data Viz with ggplot"
+author: "Ricardo Carias (PID: A18573289)"
+format: pdf
+toc: TRUE 
+---
+
+## Background
+There are a few ways to make headings. A level 2 header will have an underlined divider to identify the section. There are lot's of ways to make plots in R. These include "base R". Ex: `plot()` and add on packages, **ggplot2**.
+
+Let's make the same plot with these two graphic systems. Let's play around with data set `cars`.
+
+```{r}
+head(cars)
+plot(cars)
+```
+Lets try and beautify with ggplot2 First, we have to install the required packages. To do so, we use the command `install.packages`("ggplot2"). 
+
+> **DON'T FORGET, WE NEVER RUN ANY INSTALL FUNCTION WITHIN THE CODE CHUNKS. IF YOU DO, EVERYTIME IT'S RAN, YOU WILL RE-INSTALL IT.** 
+
+To use any of the installed packages, we must recall it from our library. As, we can have any number of packages within our library that achieve various things.
+
+```{r}
+library(ggplot2)
+ggplot(cars) + aes(x=speed ,y=dist ) + geom_point() + geom_line()
+
+```
+
+```{r}
+library(ggplot2)
+ggplot(cars) + aes(x=speed ,y=dist ) + geom_point() + geom_smooth( method="lm", se = FALSE)
+
+```
+### **Note**: You can make adjustments within each function. Observe, how we create a linear model.
+
+
+Every ggplot **requires** at least 3 components:
+
+1. The **data**.
+
+2. The **aes**, As in what elements of the DF are we plotting along with the color scheme design.  
+
+3. The **geom_**, Which will define what type of graphic / plot we are generating. 
+
+```{r}
+library(ggplot2)
+ggplot(cars) + aes(x=speed ,y=dist ) + geom_point() + geom_smooth( method="lm", se = FALSE) + labs(x= "SPEED (MPH)" , y= "DISTANCE (ft)", title = "Stoping Distance of the Old Cars in this DF" )
+
+```
+
+```{r}
+library(ggplot2)
+ggplot(cars) + aes(x=speed ,y=dist ) + geom_point() + geom_smooth( method="lm", se = FALSE) + labs(x= "SPEED (mph)" , y= "DISTANCE (ft)", title = "Stoping Distance of the Old Cars in this DF" ) + theme_bw()
+
+```
+
+## Gene Expression Plot 
+
+Read in some data on the effects of GLP-1 inhibitors on gene expression: 
+**This is similar to using "read.csv()"**
+
+```{r}
+url <- "https://bioboot.github.io/bimm143_S20/class-material/up_down_expression.txt"
+genes <- read.delim(url)
+head(genes)
+```
+
+Version 1 plot - Simple Start
+
+```{r}
+ggplot(genes)+aes(Condition1, Condition2) + geom_point(col= "blue", alpha = 0.2)
+
+
+```
+Version 2 - Lets ascribe colors to different values to visualize the differences. 
+```{r}
+ggplot(genes) + aes(x=Condition1, y=Condition2, col= State) + geom_point(alpha= 0.5)+ scale_color_manual(values = c("blue", "orange", "magenta")) + labs( x= "Negative Control (No Drug)", y= "Experimental Drug", title = "Which genes are modulated by GLP-1" , subtitle = "Q: Does this drug have an affect on gene expression?") 
+
+
+```
+
+## Exploring **"gapmider"**
+
+
+```{r}
+# File location online
+url <- "https://raw.githubusercontent.com/jennybc/gapminder/master/inst/extdata/gapminder.tsv"
+
+gapminder <- read.delim(url)
+
+head(gapminder)
+
+
+```
+
+> Q. How many rows does this dataset have?
+
+```{r}
+nrow(gapminder)
+
+```
+
+> Q. How many continents are in this dataset? 
+
+```{r}
+table(gapminder$continent)
+
+
+```
+
+> Version 1 - gdpPercap vs LifeExp
+
+```{r}
+ggplot(gapminder) + aes(gdpPercap, lifeExp, col = continent) + geom_point(alpha=0.5)
+```
+Let's plot per continent, using ggplot2. Aka: "Faceting"
+
+## Introduction to **"dplyr package"**
+
+New Package: 
+
+1- install
+
+2- library
+
+3- Run it 
+
+**Command**: `filter()`
+
+```{r}
+library(dplyr)
+filter(gapminder, year == 2007)
+```
+
+
+
+
+
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+
+gapminder %>%
+  filter(year %in% c(1977, 2007)) %>%
+  ggplot(aes(gdpPercap, lifeExp, col = continent)) +
+  geom_point(alpha = 0.3) +
+  facet_wrap(~ year)
+
+
+
+```
+
+
+
+
+
+

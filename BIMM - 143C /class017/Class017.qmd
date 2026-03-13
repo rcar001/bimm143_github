@@ -1,0 +1,115 @@
+---
+title: "Lab: 017"
+author: "Ricardo Carias PID: A18573289"
+format: pdf
+toc: TRUE
+---
+
+## Down Stream Analysis 
+
+```{r}
+library(rhdf5)
+library(tximport)
+library(ggplot2)
+library(ggrepel)
+
+# locate all kallisto output folders
+folders <- list.files(pattern="_quant$")
+
+# generate sample names by removing "_quant"
+samples <- sub("_quant","",folders)
+
+# construct path to abundance files
+files <- file.path(folders,"abundance.h5")
+
+# label files with sample names
+names(files) <- samples
+
+# import kallisto transcript counts
+txi.kallisto <- tximport(files, type="kallisto", txOut=TRUE)
+
+# inspect counts matrix
+head(txi.kallisto$counts)
+
+# total transcript counts per sample
+colSums(txi.kallisto$counts)
+
+# number of detected transcripts
+sum(rowSums(txi.kallisto$counts)>0)
+
+# remove transcripts with no reads
+to.keep <- rowSums(txi.kallisto$counts) > 0
+kset.nonzero <- txi.kallisto$counts[to.keep,]
+
+# remove transcripts with no variance
+keep2 <- apply(kset.nonzero,1,sd) > 0
+x <- kset.nonzero[keep2,]
+
+# PCA
+pca <- prcomp(t(x), scale=TRUE)
+
+summary(pca)
+```
+
+```{r}
+colSums(txi.kallisto$counts)
+```
+
+```{r}
+sum(rowSums(txi.kallisto$counts)>0)
+```
+
+```{r}
+to.keep <- rowSums(txi.kallisto$counts) > 0
+kset.nonzero <- txi.kallisto$counts[to.keep,]
+
+keep2 <- apply(kset.nonzero,1,sd)>0
+x <- kset.nonzero[keep2,]
+```
+
+## Principal Component Analysis 
+
+```{r}
+pca <- prcomp(t(x), scale=TRUE)
+summary(pca)
+```
+
+```{r}
+plot(pca$x[,1], pca$x[,2],
+     col=c("blue","blue","red","red"),
+     xlab="PC1", ylab="PC2", pch=16)
+```
+
+>Q. Use ggplot to make a similar figure of PC1 vs PC2 and a separate figure PC1 vs PC3 and PC2 vs PC3.
+
+```{r}
+
+# Define colors for the samples.
+# The first two samples (SRR2156848 and SRR2156849) are controls (blue)
+# The last two samples (SRR2156850 and SRR2156851) are enhancer-targeted CRISPR samples (red)
+mycols <- c("blue","blue","red","red")
+
+# PC1 vs PC2
+ggplot(data.frame(pca$x)) +
+  aes(PC1, PC2, label=rownames(pca$x)) +
+  geom_point(col=mycols, size=3) +
+  geom_text_repel(col=mycols) +
+  theme_bw()
+
+# PC1 vs PC3
+ggplot(data.frame(pca$x)) +
+  aes(PC1, PC3, label=rownames(pca$x)) +
+  geom_point(col=mycols, size=3) +
+  geom_text_repel(col=mycols) +
+  theme_bw()
+
+# PC2 vs PC3
+ggplot(data.frame(pca$x)) +
+  aes(PC2, PC3, label=rownames(pca$x)) +
+  geom_point(col=mycols, size=3) +
+  geom_text_repel(col=mycols) +
+  theme_bw()
+
+```
+
+The plot makes it clear that PC1 separates the two control samples (SRR2156848 and SRR2156849) from the two enhancer-targeting CRISPR-Cas9 samples (SRR2156850 and SRR2156851). PC2 separates the two control samples from each other, and PC3 separates the two enhancer-targeting CRISPR samples from each other. This could be investigated further to see which genes result in these separation patterns. It is also at least slightly reassuring, implying that there are considerable differences between the treated and control samples.
