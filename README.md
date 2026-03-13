@@ -11,7 +11,7 @@ Class 15 - GitHub Rep.
 - [Class 6 - Why, when and how of writing your own R functions](class006/rcarias006.pdf)
 - [Class 7 - Introduction to machine learning for Bioinformatics 1](class007/C007--Machine-Learning-1.pdf)
 - [Class 8 - Unsupervised learning mini-project](class008/Class008---Mini-Proj.pdf)
-- [Class 9 - Candy mini-project](class009/Class009---Candy-Project.pdf)
+- [Class 9 - Candy mini-project](class009/Class009CandyProject.pdf)
 - [Class 10 - Structural Bioinformatics (pt1)](Class010/Class010.pdf)
 - [Class 11 - Structural Bioinformatics (pt2 AlphaFold)](class011/Alphafold-2.11.26-.pdf)
 - [Class 12 - Genome informatics and high throughput sequencing](class012/Class-012-.pdf)
