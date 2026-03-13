@@ -8,7 +8,7 @@ Class 15 - GitHub Rep.
 
 - [Class 4 - Bioinformatics data analysis with R](class004/class04.pdf)
 - [Class 5 - Data exploration and visualization with R](class005/class05.pdf)
-- [Class 6 - Why, when and how of writing your own R functions](class006/rcarias006.pdf)
+- [Class 6 - Why, when and how of writing your own R functions](class006/class006/rcarias006.pdf)
 - [Class 7 - Introduction to machine learning for Bioinformatics 1](class007/C007--Machine-Learning-1.pdf)
 - [Class 8 - Unsupervised learning mini-project](class008/Class008---Mini-Proj.pdf)
 - [Class 9 - Candy mini-project](class009/Class009CandyProject.pdf)
