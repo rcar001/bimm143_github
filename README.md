@@ -2,7 +2,7 @@
 
 My coursework from BIMM 143 at UC San Diego.
 
-*DONT ADD CLASS 15*
+Class 15 - GitHub Rep.
 
 ## Classes
 
